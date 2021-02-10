@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A Chess Board implementation using the 0x88 board representation.
@@ -70,9 +71,74 @@ public class Board {
    * @param seed     The value to be used as a random seed. Using the same seed results in an identical board.
    */
   public Board(long seed){
-	  //Standard chess layout for the first rows of Black and White pieces
+	  // Start with an empty board
+	  this.squares = new byte[128];
+	  // Add the pawns
+	  for (int i = 16; i < 24; i++) {
+		  squares[i] = PAWN;
+	  }
+	  for (int i = 96; i < 104; i++) {
+		  squares[i] = BPAWN;
+	  }
 	  
+	  // Make a Random from the seed
+	  Random r = new Random(seed);
 	  
+	  // Add the bishops
+	  int bcol1 = r.nextInt(4) * 2;
+	  squares[bcol1] = BISHOP;
+	  squares[bcol1 + 112] = BBISHOP;
+	  int bcol2 = r.nextInt(4) * 2 + 1;
+	  squares[bcol2] = BISHOP;
+	  squares[bcol2 + 112] = BBISHOP;
+	  
+	  // Add the queens
+	  int qcol;
+	  do {
+		  qcol = r.nextInt(8);
+	  } while (qcol == bcol1 || qcol == bcol2);
+	  squares[qcol] = QUEEN;
+	  squares[qcol + 112] = BQUEEN;
+	  
+	  // Add the knights
+	  int kcol1;
+	  do {
+		  kcol1 = r.nextInt(8);
+	  } while (kcol1 == bcol1 || kcol1 == bcol2 || kcol1 == qcol);
+	  squares[kcol1] = KNIGHT;
+	  squares[kcol1 + 112] = BKNIGHT;
+	  int kcol2;
+	  do {
+		  kcol2 = r.nextInt(8);
+	  } while (kcol2 == bcol1 || kcol2 == bcol2 || kcol2 == qcol || kcol2 == kcol1);
+	  squares[kcol2] = KNIGHT;
+	  squares[kcol2 + 112] = BKNIGHT;
+	  
+	  // Add the Rooks and King
+	  boolean toggle = false;
+	  for (int i = 0; i < 8; i++) {
+		  if (squares[i] == EMPTY) {
+			  if (toggle) {
+				  squares[i] = KING;
+				  squares[i + 112] = BKING;
+				  this.whiteKingPosition = i;
+				  this.blackKingPosition = i + 112;
+			  } else {
+				  squares[i] = ROOK;
+				  squares[i + 112] = BROOK;
+			  }
+			  toggle = !toggle;
+		  }
+	  }
+	  
+	  // Do the rest of the setup
+      this.turnColour = WHITE;
+      this.previousMove = null;
+      this.validMoves = generateValidMoves();
+      this.whitePiecesCaptured = new ArrayList<Byte>();
+      this.blackPiecesCaptured = new ArrayList<Byte>();
+      this.score = 0;
+      this.amountOfMoves=0;
   }
   
 
