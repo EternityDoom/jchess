@@ -6,6 +6,9 @@ import static lookup.Coordinates.*;
 import static lookup.PieceTables.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A Chess Board implementation using the 0x88 board representation.
@@ -25,6 +28,8 @@ public class Board {
   private int score;
   private int amountOfMoves;
 
+  private static List<Character> firstRow = Arrays.asList('R','B','N','Q','K','N','B','R');
+  
   /**
    * Initialise and create the board to contain chess pieces arranged in an order such that the resulting positions represent
    * a valid chess starting position.
@@ -50,6 +55,42 @@ public class Board {
     this.amountOfMoves=0;
   }
 
+  /**
+   * Constructs a new chess board using the Fischer Random Chess setup rules, using the provided random seed.
+   * The setup rules are as follows:
+   *
+   * - Only the top and bottom rows are randomized.
+   * - Black and White have the same pieces in each column.
+   * - Each player has one bishop on one of their four white squares.
+   * - Each player has one bishop on one of their four black squares.
+   * - Each player has one queen and two knights on their 6 remaining squares.
+   * - Each player has a rook on their leftmost and rightmost remaining squares.
+   * - Each player's king is placed in the remaining square.
+   *
+   * @param seed     The value to be used as a random seed. Using the same seed results in an identical board.
+   */
+  public Board(long seed){
+	  //Standard chess layout for the first rows of Black and White pieces
+	  
+	  
+  }
+  
+
+  public static List<Character> RandomizeFirstRow(){	
+	  while(validateRandomization(firstRow.toString().replaceAll("[^\\p{Upper}]", "")) == false)
+	  {
+		  Collections.shuffle(firstRow);
+	  }
+		
+		return firstRow;
+	  }
+  
+  private static boolean validateRandomization(String rank){
+	  if(!rank.matches(".*R.*K.*R.*")) return false; //Check for a series of an R, followed by a K, followed by an R with varying characters between.
+	  if(!rank.matches(".*B(..|....|......|)B.*")) return false; //Check for a B, followed by three possible wild card combinations, followed by a B.
+	  return true;
+	}
+  
   /**
    * Construct a new chess board which is a copy of a supplied board.
    *
