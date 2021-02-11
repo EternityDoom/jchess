@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * <CODE>myWindow</CODE> distributes methods to build a GUI instance of
@@ -133,6 +134,10 @@ public final class MainWindow {
   private JPanel testPanel;
   private JList list = new JList ();
   JScrollPane listScroller = new JScrollPane ();
+  
+  // Added for board randomization
+  private Random random = new Random();
+  private long seed;
 
   /**
    * Main-Method to make class executable
@@ -494,7 +499,7 @@ public final class MainWindow {
       continueButton.addMouseListener (continueButtonListener);
       continueButton.setVisible (true);
     }
-    board = new Board ();
+    board = new Board (seed);
     if ( a < 0 ) {
       myBoard.setBoard (board);
     }
@@ -682,7 +687,8 @@ public final class MainWindow {
     myTimer.setPlayer2Name (player2.getPlayerName ());
     myTimer.resetTimer (timeRemaining);
     myTimer.continueTimer ();
-    board = new Board ();
+    seed = random.nextLong();
+    board = new Board (seed);
     myBoard.setBoard (board);
     myBoard.setLastMove (null);
     myBoard.setPossibleMoves (null);
@@ -816,7 +822,7 @@ public final class MainWindow {
         if ( moveStorage.size () > 0 ) {
 
           // create a new Board and a new Storage
-          Board board2 = new Board ();
+          Board board2 = new Board (seed);
           List<Move> moveStorage2 = Collections
               .synchronizedList (new ArrayList<Move> ());
           currentColor = WHITE;
@@ -826,7 +832,7 @@ public final class MainWindow {
             board2.makeMove (moveStorage.get (i));
             moveStorage2.add (moveStorage.get (i));
           }
-          board = new Board ();
+          board = new Board (seed);
           board = board2;
           myBoard.setBoard (board2);
 
@@ -879,7 +885,7 @@ public final class MainWindow {
             myThread.pause ();
           }
         }
-        board = new Board ();
+        board = new Board (seed);
         for (int i = 0; i < moveStorage.size (); i++) {
           board.makeMove (moveStorage.get (i));
         }
@@ -921,7 +927,7 @@ public final class MainWindow {
           }
         }
         humanMove = null;
-        Board board2 = new Board ();
+        Board board2 = new Board (seed);
         List<Move> moveStorage2 = Collections
             .synchronizedList (new ArrayList<Move> ());
         for (int i = 0; i < board.getAmountOfMoves (); i++) {

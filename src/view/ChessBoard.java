@@ -68,7 +68,7 @@ class ChessBoard extends JPanel {
   private LinkedList<Position> possibleMoves = null;
   private Position[] lastMove = null;
 
-  private Board boardData = new Board ();
+  private Board boardData;
   private BufferedImage[] image = new BufferedImage[14];
 
   // path to images, change here, if error!
