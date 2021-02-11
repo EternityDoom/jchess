@@ -6,9 +6,6 @@ import static lookup.Coordinates.*;
 import static lookup.PieceTables.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -28,8 +25,6 @@ public class Board {
   private ArrayList<Byte> blackPiecesCaptured;
   private int score;
   private int amountOfMoves;
-
-  private static List<Character> firstRow = Arrays.asList('R','B','N','Q','K','N','B','R');
   
   /**
    * Initialise and create the board to contain chess pieces arranged in an order such that the resulting positions represent
@@ -140,22 +135,6 @@ public class Board {
       this.score = 0;
       this.amountOfMoves=0;
   }
-  
-
-  public static List<Character> RandomizeFirstRow(){	
-	  while(validateRandomization(firstRow.toString().replaceAll("[^\\p{Upper}]", "")) == false)
-	  {
-		  Collections.shuffle(firstRow);
-	  }
-		
-		return firstRow;
-	  }
-  
-  private static boolean validateRandomization(String rank){
-	  if(!rank.matches(".*R.*K.*R.*")) return false; //Check for a series of an R, followed by a K, followed by an R with varying characters between.
-	  if(!rank.matches(".*B(..|....|......|)B.*")) return false; //Check for a B, followed by three possible wild card combinations, followed by a B.
-	  return true;
-	}
   
   /**
    * Construct a new chess board which is a copy of a supplied board.
